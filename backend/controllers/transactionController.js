@@ -22,4 +22,23 @@ const createTransaction = async (req, res) => {
         });
     };
 };
-module.exports = { createTransaction };
+
+const getTransactions = async (req, res) => {
+    try {
+        const transactions = await Transaction.find();
+        res.status(200).json({
+            success: true,
+            data: transactions
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    };
+};
+
+module.exports = {
+    createTransaction,
+    getTransactions,
+};
