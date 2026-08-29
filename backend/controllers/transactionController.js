@@ -21,4 +21,5 @@ const createTransaction = async (req, res) => {
             message: err.message
         });
     };
-}
+};
+module.exports = { createTransaction };
