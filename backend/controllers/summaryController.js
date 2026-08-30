@@ -4,7 +4,7 @@ const getSummary = async (req, res) => {
     try {
         let totalIncome = 0;
         let totalExpense = 0;
-        let netBalance = 0;
+        let balance = 0;
 
         const transactions = await Transaction.find();
 
@@ -16,14 +16,14 @@ const getSummary = async (req, res) => {
             }
         });
 
-        netBalance = totalIncome - totalExpense;
+        balance = totalIncome - totalExpense;
 
         res.status(200).json({
             success: true,
             data: {
                 totalIncome,
                 totalExpense,
-                netBalance,
+                balance,
             }
         });
 

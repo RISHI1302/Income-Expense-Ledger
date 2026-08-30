@@ -15,7 +15,16 @@ const createTransaction = async (req, res) => {
             success: true,
             data: transaction
         });
+
     } catch (err) {
+
+        if(err.name==="ValidationError"){
+            return res.status(400).json({
+                success: false,
+                message: err.message,
+            });
+        }
+
         res.status(500).json({
             success: false,
             message: err.message
@@ -47,7 +56,7 @@ const getTransactions = async (req, res) => {
             }
         }
 
-        const transactions = await Transaction.find(filter);
+        const transactions = await Transaction.find(filter).sort({date: -1});
         res.status(200).json({
             success: true,
             data: transactions
