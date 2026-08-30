@@ -72,6 +72,24 @@ function App() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleDelete = async (id) => {
+
+    try {
+
+      await axios.delete(
+        `http://localhost:5000/api/transactions/${id}`
+      );
+
+      fetchTransactions();
+      fetchSummary();
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
 
   };
 
@@ -94,7 +112,7 @@ function App() {
 
         <div>
           <h3>Net Balance</h3>
-          <p className={summary.netBalance >= 0 ? "positive" : "negative"}>
+          <p className={summary.balance >= 0 ? "positive" : "negative"}>
             ₹{summary.balance}
           </p>
         </div>
@@ -202,7 +220,9 @@ function App() {
 
               <td>
                 <button>Edit</button>
-                <button>Delete</button>
+                <button onClick={() => handleDelete(transaction._id)}>
+                  Delete
+                </button>
               </td>
 
             </tr>
