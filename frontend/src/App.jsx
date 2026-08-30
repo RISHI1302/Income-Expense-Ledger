@@ -35,11 +35,7 @@ function App() {
   const fetchTransactions = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/transactions",
-        {
-          params: filters
-        }
-      );
+        "http://localhost:5000/api/transactions",{params: filters});
 
       setTransactions(response.data.data);
 
@@ -50,9 +46,7 @@ function App() {
 
   const fetchSummary = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:5000/api/summary"
-      );
+      const response = await axios.get("http://localhost:5000/api/summary");
 
       setSummary(response.data.data);
     } catch (err) {
@@ -66,16 +60,11 @@ function App() {
     try {
       if (editingId) {
         await axios.put(
-          `http://localhost:5000/api/transactions/${editingId}`,
-          formData
-        );
+          `http://localhost:5000/api/transactions/${editingId}`, formData);
 
         setEditingId(null);
       } else {
-        await axios.post(
-          "http://localhost:5000/api/transactions",
-          formData
-        );
+        await axios.post("http://localhost:5000/api/transactions", formData);
       }
 
       setFormData({
@@ -97,9 +86,7 @@ function App() {
   const handleDelete = async (id) => {
     try {
 
-      await axios.delete(
-        `http://localhost:5000/api/transactions/${id}`
-      );
+      await axios.delete(`http://localhost:5000/api/transactions/${id}`);
 
       fetchTransactions();
       fetchSummary();
@@ -202,7 +189,7 @@ function App() {
         </button>
 
         <button
-        type="button"
+          type="button"
           onClick={() => {
             setFilters({
               type: "",
