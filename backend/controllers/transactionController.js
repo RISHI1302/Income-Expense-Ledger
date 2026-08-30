@@ -18,7 +18,7 @@ const createTransaction = async (req, res) => {
 
     } catch (err) {
 
-        if(err.name==="ValidationError"){
+        if (err.name === "ValidationError") {
             return res.status(400).json({
                 success: false,
                 message: err.message,
@@ -56,7 +56,7 @@ const getTransactions = async (req, res) => {
             }
         }
 
-        const transactions = await Transaction.find(filter).sort({date: -1});
+        const transactions = await Transaction.find(filter).sort({ date: -1 });
         res.status(200).json({
             success: true,
             data: transactions
@@ -76,7 +76,10 @@ const updateTransaction = async (req, res) => {
         const transaction = await Transaction.findByIdAndUpdate(
             id,
             updateData,
-            { new: true }
+            {
+                new: true,
+                runValidators: true
+            }
         );
 
         if (!transaction) {
@@ -92,12 +95,26 @@ const updateTransaction = async (req, res) => {
         });
 
     } catch (err) {
+        if (err.name === "ValidationError") {
+            return res.status(400).json({
+                success: false,
+                message: err.message,
+            });
+        }
+
+        if (err.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid transaction ID",
+            });
+        }
+
         res.status(500).json({
             success: false,
             message: err.message
         });
     };
-}
+};
 
 const deleteTransaction = async (req, res) => {
     try {
@@ -118,12 +135,19 @@ const deleteTransaction = async (req, res) => {
         });
 
     } catch (err) {
+        if (err.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid transaction ID",
+            });
+        }
+
         res.status(500).json({
             success: false,
             message: err.message
         });
     }
-}
+};
 
 const getTransactionById = async (req, res) => {
     try {
@@ -146,12 +170,19 @@ const getTransactionById = async (req, res) => {
 
 
     } catch (err) {
+        if (err.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid transaction ID",
+            });
+        }
+
         res.status(500).json({
             success: false,
             message: err.message,
         });
     }
-}
+};
 
 module.exports = {
     createTransaction,
