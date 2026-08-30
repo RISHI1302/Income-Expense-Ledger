@@ -25,7 +25,29 @@ const createTransaction = async (req, res) => {
 
 const getTransactions = async (req, res) => {
     try {
-        const transactions = await Transaction.find();
+        const { type, category, startDate, endDate } = req.query;
+        const filter = {};
+        if (type) {
+            filter.type = type;
+        }
+
+        if (category) {
+            filter.category = category;
+        }
+
+        if (startDate || endDate) {
+            filter.date = {};
+
+            if (startDate) {
+                filter.date.$gte = new Date(startDate);
+            }
+
+            if (endDate) {
+                filter.date.$lte = new Date(endDate);
+            }
+        }
+
+        const transactions = await Transaction.find(filter);
         res.status(200).json({
             success: true,
             data: transactions
