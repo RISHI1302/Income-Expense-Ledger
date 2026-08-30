@@ -17,6 +17,7 @@ function App() {
     date: "",
     description: ""
   });
+  const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
 
@@ -51,12 +52,21 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
 
-      await axios.post(
-        "http://localhost:5000/api/transactions",
-        formData
-      );
+    try {
+      if (editingId) {
+        await axios.put(
+          `http://localhost:5000/api/transactions/${editingId}`,
+          formData
+        );
+
+        setEditingId(null);
+      } else {
+        await axios.post(
+          "http://localhost:5000/api/transactions",
+          formData
+        );
+      }
 
       setFormData({
         type: "income",
@@ -75,7 +85,6 @@ function App() {
   };
 
   const handleDelete = async (id) => {
-
     try {
 
       await axios.delete(
@@ -86,11 +95,20 @@ function App() {
       fetchSummary();
 
     } catch (error) {
-
       console.log(error);
-
     }
+  };
 
+  const handleEdit = (transaction) => {
+    setEditingId(transaction._id);
+
+    setFormData({
+      type: transaction.type,
+      amount: transaction.amount,
+      category: transaction.category,
+      date: transaction.date.split("T")[0],
+      description: transaction.description || ""
+    });
   };
 
   return (
@@ -182,7 +200,7 @@ function App() {
         />
 
         <button type="submit">
-          Add Transaction
+          {editingId ? "Update Transaction" : "Add Transaction"}
         </button>
 
       </form>
@@ -219,7 +237,10 @@ function App() {
               <td>{transaction.description}</td>
 
               <td>
-                <button>Edit</button>
+                <button onClick={() => handleEdit(transaction)}>
+                  Edit
+                </button>
+
                 <button onClick={() => handleDelete(transaction._id)}>
                   Delete
                 </button>
