@@ -9,9 +9,9 @@ const getSummary = async (req, res) => {
         const transactions = await Transaction.find();
 
         transactions.forEach(transaction => {
-            if (transaction.type == "income") {
+            if (transaction.type === "income") {
                 totalIncome += transaction.amount;
-            } else if (transaction.type == "expense") {
+            } else if (transaction.type === "expense") {
                 totalExpense += transaction.amount;
             }
         });

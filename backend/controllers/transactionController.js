@@ -94,9 +94,38 @@ const deleteTransaction = async (req, res) => {
     }
 }
 
+const getTransactionById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const transaction = await Transaction.findById(
+            id,
+        );
+
+        if (!transaction) {
+            return res.status(404).json({
+                success: false,
+                message: "Transaction doesn't exists",
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: transaction,
+        });
+
+
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message,
+        });
+    }
+}
+
 module.exports = {
     createTransaction,
     getTransactions,
     updateTransaction,
     deleteTransaction,
+    getTransactionById,
 };
