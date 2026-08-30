@@ -10,6 +10,13 @@ function App() {
     totalExpense: 0,
     balance: 0
   });
+  const [formData, setFormData] = useState({
+    type: "income",
+    amount: "",
+    category: "",
+    date: "",
+    description: ""
+  });
 
   useEffect(() => {
 
@@ -42,6 +49,32 @@ function App() {
     }
   }
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+
+      await axios.post(
+        "http://localhost:5000/api/transactions",
+        formData
+      );
+
+      setFormData({
+        type: "income",
+        amount: "",
+        category: "",
+        date: "",
+        description: ""
+      });
+
+      fetchTransactions();
+      fetchSummary();
+
+    } catch (error) {
+      console.log(error);
+    }
+
+  };
+
   return (
     <div className="app">
 
@@ -67,6 +100,74 @@ function App() {
         </div>
 
       </div>
+
+      <form onSubmit={handleSubmit}>
+
+        <select
+          value={formData.type}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              type: e.target.value
+            })
+          }
+        >
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+
+        <input
+          type="number"
+          placeholder="Amount"
+          value={formData.amount}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              amount: e.target.value
+            })
+          }
+        />
+
+        <input
+          type="text"
+          placeholder="Category"
+          value={formData.category}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              category: e.target.value
+            })
+          }
+        />
+
+        <input
+          type="date"
+          value={formData.date}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              date: e.target.value
+            })
+          }
+        />
+
+        <input
+          type="text"
+          placeholder="Description"
+          value={formData.description}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              description: e.target.value
+            })
+          }
+        />
+
+        <button type="submit">
+          Add Transaction
+        </button>
+
+      </form>
 
       <table>
 
