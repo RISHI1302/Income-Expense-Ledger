@@ -9,6 +9,7 @@ const transactionSchema = new mongoose.Schema({
     amount: {
         type: Number,
         required: true,
+        min: 0.01,
     },
     category: {
         type: String,
@@ -16,12 +17,17 @@ const transactionSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
+        default: Date.now,
         required: true,
     },
     description: {
         type: String,
     },
-});
+},
+    {
+        timestamps: true,
+    },
+);
 
 const Transaction = mongoose.model("Transaction", transactionSchema);
 module.exports = Transaction;
