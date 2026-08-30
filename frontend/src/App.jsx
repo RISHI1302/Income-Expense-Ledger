@@ -35,7 +35,7 @@ function App() {
   const fetchTransactions = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/transactions",{params: filters});
+        "http://localhost:5000/api/transactions", { params: filters });
 
       setTransactions(response.data.data);
 
@@ -305,11 +305,11 @@ function App() {
               <td>{transaction.description}</td>
 
               <td>
-                <button onClick={() => handleEdit(transaction)}>
+                <button type="button" onClick={() => handleEdit(transaction)}>
                   Edit
                 </button>
 
-                <button onClick={() => handleDelete(transaction._id)}>
+                <button type="button" onClick={() => handleDelete(transaction._id)}>
                   Delete
                 </button>
               </td>
