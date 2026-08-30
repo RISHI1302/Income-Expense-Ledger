@@ -18,6 +18,12 @@ function App() {
     description: ""
   });
   const [editingId, setEditingId] = useState(null);
+  const [filters, setFilters] = useState({
+    type: "",
+    category: "",
+    startDate: "",
+    endDate: ""
+  });
 
   useEffect(() => {
 
@@ -28,9 +34,13 @@ function App() {
 
   const fetchTransactions = async () => {
     try {
+      const response = await axios.get(
+        "http://localhost:5000/api/transactions",
+        {
+          params: filters
+        }
+      );
 
-      const response = await axios.get("http://localhost:5000/api/transactions");
-      console.log(response.data);
       setTransactions(response.data.data);
 
     } catch (error) {
@@ -134,6 +144,77 @@ function App() {
             ₹{summary.balance}
           </p>
         </div>
+
+      </div>
+
+      <div className="filters">
+
+        <select
+          value={filters.type}
+          onChange={(e) =>
+            setFilters({
+              ...filters,
+              type: e.target.value
+            })
+          }
+        >
+          <option value="">All Types</option>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+
+        <input
+          type="text"
+          placeholder="Category"
+          value={filters.category}
+          onChange={(e) =>
+            setFilters({
+              ...filters,
+              category: e.target.value
+            })
+          }
+        />
+
+        <input
+          type="date"
+          value={filters.startDate}
+          onChange={(e) =>
+            setFilters({
+              ...filters,
+              startDate: e.target.value
+            })
+          }
+        />
+
+        <input
+          type="date"
+          value={filters.endDate}
+          onChange={(e) =>
+            setFilters({
+              ...filters,
+              endDate: e.target.value
+            })
+          }
+        />
+
+        <button type="button" onClick={fetchTransactions}>
+          Apply Filters
+        </button>
+
+        <button
+        type="button"
+          onClick={() => {
+            setFilters({
+              type: "",
+              category: "",
+              startDate: "",
+              endDate: ""
+            });
+            setTimeout(() => fetchTransactions(), 0);
+          }}
+        >
+          Clear Filters
+        </button>
 
       </div>
 
