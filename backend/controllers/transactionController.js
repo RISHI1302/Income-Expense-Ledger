@@ -47,19 +47,19 @@ const updateTransaction = async (req, res) => {
             updateData,
             { new: true }
         );
-        
+
         if (!transaction) {
             return res.status(404).json({
                 success: false,
                 message: "Page Not Found",
             });
         }
-        
+
         res.status(200).json({
             success: true,
             data: transaction
         });
-        
+
     } catch (err) {
         res.status(500).json({
             success: false,
@@ -68,8 +68,35 @@ const updateTransaction = async (req, res) => {
     };
 }
 
+const deleteTransaction = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const transaction = await Transaction.findByIdAndDelete(
+            id,
+        );
+        if (!transaction) {
+            return res.status(404).json({
+                success: false,
+                message: "Transaction Not Found",
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Transaction deleted successfully"
+        });
+
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
+}
+
 module.exports = {
     createTransaction,
     getTransactions,
     updateTransaction,
+    deleteTransaction,
 };
